@@ -1,0 +1,169 @@
+<html>
+<head>
+<title>Brainex</title>
+
+</head>
+<body>
+<div>
+<textarea id="src" rows="40" cols="160">
+おお、かっこいいな おお、かっこいいな おお、かっこいいな おお、かっこいいな
+おお、かっこいいな おお、かっこいいな おお、かっこいいな おお、かっこいいな
+おお、かっこいいな 
+「うあああああああああああああああああああああああああーーー」「マツダーーー！！！！」
+きっちくー 
+おお、かっこいいな おお、かっこいいな おお、かっこいいな おお、かっこいいな
+おお、かっこいいな おお、かっこいいな おお、かっこいいな おお、かっこいいな
+きっちくー
+おお、かっこいいな おお、かっこいいな おお、かっこいいな おお、かっこいいな
+おお、かっこいいな おお、かっこいいな おお、かっこいいな おお、かっこいいな
+おお、かっこいいな おお、かっこいいな おお、かっこいいな
+きっちくー
+おお、かっこいいな おお、かっこいいな おお、かっこいいな おお、かっこいいな
+おお、かっこいいな
+すすまない すすまない すすまない ダダンナーザ 念のためもう一回聞くぷよ？
+きっちくー という算段ね！
+きっちくー
+おお、かっこいいな おお、かっこいいな という算段ね！
+おお、かっこいいな おお、かっこいいな おお、かっこいいな おお、かっこいいな
+おお、かっこいいな おお、かっこいいな おお、かっこいいな という算段ね！ という算段ね！
+おお、かっこいいな おお、かっこいいな おお、かっこいいな という算段ね！
+きっちくー ダダンナーザ という算段ね！
+ダダンナーザ ダダンナーザ ダダンナーザ ダダンナーザ
+ダダンナーザ ダダンナーザ ダダンナーザ ダダンナーザ
+ダダンナーザ ダダンナーザ ダダンナーザ ダダンナーザ という算段ね!
+すすまない
+おお、かっこいいな おお、かっこいいな おお、かっこいいな おお、かっこいいな
+おお、かっこいいな おお、かっこいいな おお、かっこいいな おお、かっこいいな という算段ね！
+ダダンナーザ ダダンナーザ ダダンナーザ ダダンナーザ
+ダダンナーザ ダダンナーザ ダダンナーザ ダダンナーザ という算段ね！
+おお、かっこいいな おお、かっこいいな おお、かっこいいな という算段ね！
+ダダンナーザ ダダンナーザ ダダンナーザ ダダンナーザ
+ダダンナーザ ダダンナーザ という算段ね！
+ダダンナーザ ダダンナーザ ダダンナーザ ダダンナーザ
+ダダンナーザ ダダンナーザ ダダンナーザ ダダンナーザ という算段ね！
+きっちくー おお、かっこいいな という算段ね！
+</textarea>
+</div>
+<div>
+<button id="go" onClick="go();">go</button>
+</div>
+<div>
+<textarea id="dst" rows="4" cols="160"> 強さ・・・</textarea>
+</div>
+<div>
+<button id="reset" onClick="reset();">reset</button>
+</div>
+<hr/>
+<div>
+何?<BR>
+上のフォームは、最初に「ソースを記述し」その後に「goボタンを押すと」実行した結果が後のフォームに出力されるプログラムです。
+</div>
+<div id="dbg"></div>
+<script>
+var reset = function(){
+  document.getElementById( 'src' ).value = '';
+  document.getElementById( 'dst' ).value = '';
+};
+var go = function(){
+  document.getElementById( 'go' ).enable = false;
+  document.getElementById( 'reset' ).enable = false;
+  document.getElementById( 'dst' ).value = '';
+  var src = document.getElementById( "src" ).value
+    .replace( /[><+\-.,\[\]]/g, '' )
+    .replace( /きっちくー/g, '>' )
+    .replace( /すすまない/g, '<' )
+    .replace( /おお、かっこいいな/g, '+' )
+    .replace( /ダダンナーザ/g, '-' )
+    .replace( /という算段ね/g, '.' )
+//  .replace( / /g, ',' )
+    .replace( /「うあああああああああああああああああああああああああーーー」「マツダーーー！！！！」/g, '[' )
+    .replace( /念のためもう一回聞くぷよ？/g, ']' )
+    .replace( /[^><+\-.,\[\]]/g, '' )
+  ;
+  var dsp =
+  // 0
+      '\0????????\a\b\t\n\v\f\r'
+    + '???????????\e????'
+    + ' !"#$%&\'()*+,-./'
+    + '0123456789:;<=>?'
+    + '@ABCDEFGHIJKLMNO'
+    + 'PQRSTUVWXYZ[\\]^_'
+    + '`abcdefghijklmno'
+    + 'pqrstuvwxyz{|}~?'
+    + '????????????????'
+    + '????????????????'
+    + '????????????????'
+    + '????????????????'
+    + '????????????????'
+    + '????????????????'
+    + '????????????????'
+    + '????????????????'
+  ;
+  var mem = [];
+  for ( var i = 0; i <= 255; i ++ ) { mem[ i ] = 0; }
+  var r = 0;
+  var p = 0;
+  outer : {
+    main : for( var step = 0; step <= 65535; step ++ ) {
+      if ( src.length <= r ) { break outer };
+      switch ( src.charAt( r ) ) {
+        case '>' : p = ( p + 1 ) % 256; break;
+        case '<' : p = ( p + 255 ) % 256; break;
+        case '+' : mem[ p ] = ( mem[ p ] + 1 ) % 256; break;
+        case '-' : mem[ p ] = ( mem[ p ] + 255 ) % 256; break;
+        case '.' :
+          document.getElementById( 'dst' ).value += dsp.charAt( mem[ p ] );
+          break;
+//      case ',' : break;
+        case '[' : 
+          if ( 0 == mem[ p ] ) {
+            var nest = 0;
+            forward : while ( true ) {
+              if ( src.length <= r ) { break main; }
+              switch ( src.charAt( r ) ) {
+                case '[' :
+                  nest  ++;
+                  break;
+                case ']' :
+                  nest  --;
+                  if ( 0 == nest ) { break forward; }
+                  break;
+                default : break;
+              }
+              r ++;
+            }
+          }
+          break;
+        case ']' : 
+          if ( 0 != mem[ p ] ) {
+            var nest = 0;
+            forward : while ( true ) {
+              if ( 0 > r ) { break main; }
+              switch ( src.charAt( r ) ) {
+                case '[' :
+                  nest  ++;
+                  if ( 0 == nest ) { break forward; }
+                  break;
+                case ']' :
+                  nest  --;
+                  break;
+                default : break;
+              }
+              r --;
+            }
+          }
+          break;
+        default : 
+          break main;
+      }
+      r ++;
+    }
+    document.getElementById( 'dst' ).value += '「ぐあああ苦しい毒だよ」死んだ';
+  }
+  document.getElementById( 'dst' ).value += ' 強さ・・・';
+  document.getElementById( 'go' ).enable = true;
+  document.getElementById( 'reset' ).enable = true;
+};
+</script>
+</body>
+</html>
